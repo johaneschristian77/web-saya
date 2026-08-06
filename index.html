@@ -8,7 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,24 +22,175 @@
 
     <style>
         /* ==========================================================================
-           1. CORE & RESET STYLES
+           0. PASSCODE OVERLAY STYLES
+           ========================================================================== */
+        #passcode-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #74091e, #3a0007);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .passcode-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .polaroid {
+            background: #fff;
+            padding: 15px 15px 25px 15px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transform: rotate(-3deg);
+            text-align: center;
+            width: 240px;
+            flex-shrink: 0;
+        }
+
+        .polaroid-img {
+            width: 100%;
+            height: 200px;
+            background: #2a2a2a;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .polaroid-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .polaroid-caption {
+            font-family: 'Caveat', cursive;
+            color: #333;
+            font-size: 26px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .keypad-section {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .keypad-section h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffb3c1;
+            margin-bottom: 15px;
+        }
+
+        .pin-display {
+            font-size: 28px;
+            letter-spacing: 12px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            max-width: 260px;
+            margin: 0 auto;
+        }
+
+        .keypad button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .keypad button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .keypad button:active {
+            transform: scale(0.95);
+            background: #ff4d6d;
+        }
+
+        .keypad button.action-btn {
+            font-size: 14px;
+            background: rgba(255, 77, 109, 0.4);
+        }
+
+        .hidden-passcode {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+
+        @media (max-width: 650px) {
+            .passcode-wrapper {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px;
+            }
+            .polaroid {
+                width: 180px;
+            }
+            .polaroid-img {
+                height: 140px;
+            }
+        }
+
+        /* ==========================================================================
+           1. CORE & RESET STYLES (REDESIGNED COLOR THEME)
            ========================================================================== */
         :root {
-            --sky-blue: #87CEEB;
-            --soft-blue: #E0F2FE;
-            --deep-blue: #0284C7;
+            --sky-blue: #74091e;
+            --soft-blue: #ffe6ea;
+            --deep-blue: #ff4d6d;
             --sun-yellow: #FEF08A;
             --warm-yellow: #FACC15;
             --cloud-white: #FFFFFF;
             --peach: #FFEDD5;
-            --mint: #D1FAE5;
-            --lavender: #E0E7FF;
-            --text-dark: #1E293B;
-            --text-light: #64748B;
-            --glass-bg: rgba(255, 255, 255, 0.45);
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --shadow-soft: 0 20px 40px -15px rgba(2, 132, 199, 0.15);
-            --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+            --mint: #FFCCD5;
+            --lavender: #4a000e;
+            --text-dark: #2b0008;
+            --text-light: #ffb3c1;
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-soft: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
             --font-main: 'Plus Jakarta Sans', sans-serif;
             --font-serif: 'Playfair Display', serif;
             --font-hand: 'Caveat', cursive;
@@ -54,17 +205,18 @@
         }
 
         html {
-            scroll-behavior: auto; /* Diserahkan ke Lenis */
+            scroll-behavior: auto;
         }
 
         body, html {
             width: 100%;
             min-height: 100%;
             font-family: var(--font-main);
-            color: var(--text-dark);
+            color: #ffffff;
             overflow-x: hidden;
-            overflow-y: auto; /* Memastikan scrollbar browser aktif */
-            background: #87CEEB;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #74091e, #3a0007);
+            background-attachment: fixed;
             transition: background-color 2.5s ease;
         }
 
@@ -73,10 +225,10 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.2);
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.6);
+            background: rgba(255, 179, 193, 0.5);
             border-radius: 10px;
         }
 
@@ -103,20 +255,20 @@
             z-index: -1;
             pointer-events: none;
             overflow: hidden;
-            opacity: 0.7;
+            opacity: 0.5;
             transition: opacity 2s ease;
         }
 
         .aurora-blob {
             position: absolute;
-            filter: blur(80px);
+            filter: blur(90px);
             border-radius: 50%;
             animation: floatBlob 20s infinite alternate ease-in-out;
         }
 
-        .blob-1 { width: 500px; height: 500px; background: rgba(254, 240, 138, 0.4); top: -100px; left: -100px; }
-        .blob-2 { width: 600px; height: 600px; background: rgba(224, 231, 255, 0.5); bottom: -150px; right: -100px; animation-delay: -5s; }
-        .blob-3 { width: 400px; height: 400px; background: rgba(209, 250, 229, 0.4); top: 40%; left: 30%; animation-delay: -10s; }
+        .blob-1 { width: 500px; height: 500px; background: rgba(255, 77, 109, 0.3); top: -100px; left: -100px; }
+        .blob-2 { width: 600px; height: 600px; background: rgba(116, 9, 30, 0.6); bottom: -150px; right: -100px; animation-delay: -5s; }
+        .blob-3 { width: 400px; height: 400px; background: rgba(254, 240, 138, 0.25); top: 40%; left: 30%; animation-delay: -10s; }
 
         @keyframes floatBlob {
             0% { transform: translate(0, 0) scale(1); }
@@ -128,7 +280,7 @@
             position: fixed;
             width: 30px;
             height: 30px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,230,150,0) 70%);
+            background: radial-gradient(circle, rgba(255, 179, 193, 0.8) 0%, rgba(255, 77, 109, 0) 70%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
@@ -161,7 +313,7 @@
 
         .audio-widget:hover {
             transform: scale(1.05);
-            background: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.25);
         }
 
         .music-bars {
@@ -173,7 +325,7 @@
 
         .music-bar {
             width: 3px;
-            background: var(--deep-blue);
+            background: #ffb3c1;
             border-radius: 3px;
             height: 4px;
             transition: height 0.2s ease;
@@ -212,7 +364,7 @@
         .hero-teaser {
             font-size: 1.2rem;
             font-weight: 600;
-            color: var(--deep-blue);
+            color: #ffb3c1;
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 24px;
@@ -241,9 +393,9 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #FEF08A, #FACC15);
+            background: linear-gradient(135deg, #ff4d6d, #c9184a);
             border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(250, 204, 21, 0.4), inset 0 -5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 25px 50px -12px rgba(255, 77, 109, 0.5), inset 0 -5px 15px rgba(0,0,0,0.2);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -253,31 +405,31 @@
             position: absolute;
             width: 32px;
             height: 100%;
-            background: #FFFFFF;
+            background: #FEF08A;
             left: 50%;
             transform: translateX(-50%);
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         .gift-ribbon-h {
             position: absolute;
             width: 100%;
             height: 32px;
-            background: #FFFFFF;
+            background: #FEF08A;
             top: 50%;
             transform: translateY(-50%);
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
         .gift-lid {
             position: absolute;
             width: 110%;
             height: 40px;
-            background: #FFFFFF;
+            background: #FEF08A;
             top: -10px;
             left: -5%;
             border-radius: 16px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 2;
         }
@@ -289,18 +441,18 @@
             transform: translateX(-50%);
             font-size: 40px;
             color: #FEF08A;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
         }
 
         .btn-open-gift {
-            background: #FFFFFF;
-            color: var(--deep-blue);
+            background: #ff4d6d;
+            color: #FFFFFF;
             font-size: 1.1rem;
             font-weight: 700;
             padding: 18px 42px;
             border-radius: 50px;
-            border: none;
-            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.4);
             cursor: pointer;
             outline: none;
             position: relative;
@@ -313,8 +465,8 @@
 
         .btn-open-gift:hover {
             transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 20px 40px rgba(2, 132, 199, 0.3);
-            background: #F0F9FF;
+            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.6);
+            background: #ff758f;
         }
 
         /* Revealed Hero Title */
@@ -329,7 +481,7 @@
             font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
             color: #FFFFFF;
-            text-shadow: 0 10px 30px rgba(2, 132, 199, 0.3);
+            text-shadow: 0 10px 30px rgba(255, 77, 109, 0.5);
             line-height: 1.1;
             margin-bottom: 8px;
         }
@@ -338,7 +490,7 @@
             font-family: var(--font-hand);
             font-size: clamp(2.5rem, 6vw, 4.5rem);
             color: var(--warm-yellow);
-            text-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
@@ -362,20 +514,21 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
-            color: var(--deep-blue);
-            background: rgba(255,255,255,0.6);
+            color: #ffb3c1;
+            background: rgba(255, 255, 255, 0.12);
             padding: 6px 18px;
             border-radius: 30px;
             display: inline-block;
             margin-bottom: 12px;
             backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
         }
 
         .section-title {
             font-size: clamp(2rem, 5vw, 3.5rem);
             font-weight: 800;
             color: #FFFFFF;
-            text-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
         /* ==========================================================================
@@ -435,7 +588,7 @@
             bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
             color: #FFF;
             padding: 8px 18px;
             border-radius: 20px;
@@ -453,7 +606,7 @@
             padding: 16px 8px 8px;
             text-align: center;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #ffffff;
             font-size: 1.05rem;
         }
 
@@ -483,7 +636,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(20, 0, 5, 0.9);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             z-index: 10000;
@@ -498,7 +651,7 @@
             max-width: 90vw;
             max-height: 85vh;
             border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
             transform: scale(0.9);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -527,10 +680,10 @@
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 4px;
-            background: rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3);
             padding: 6px;
             border-radius: 20px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
         }
 
         .puzzle-tile {
@@ -540,7 +693,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.2s ease, filter 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .puzzle-tile:hover {
@@ -549,7 +702,7 @@
         }
 
         .puzzle-tile.empty {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
             box-shadow: none;
             cursor: default;
         }
@@ -570,7 +723,7 @@
             top: 0;
             width: 4px;
             height: 100%;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 179, 193, 0.4);
             transform: translateX(-50%);
             border-radius: 2px;
         }
@@ -596,10 +749,10 @@
             top: 24px;
             width: 16px;
             height: 16px;
-            background: var(--warm-yellow);
+            background: #ff4d6d;
             border: 4px solid #FFFFFF;
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+            box-shadow: 0 0 10px rgba(255, 77, 109, 0.8);
         }
 
         .timeline-card.left::after { right: -48px; }
@@ -608,7 +761,7 @@
         .timeline-year {
             font-size: 0.9rem;
             font-weight: 800;
-            color: var(--deep-blue);
+            color: #ffb3c1;
             margin-bottom: 6px;
         }
 
@@ -616,6 +769,7 @@
             font-size: 1.25rem;
             font-weight: 700;
             margin-bottom: 8px;
+            color: #ffffff;
         }
 
         /* ==========================================================================
@@ -634,7 +788,7 @@
             height: 220px;
             background: #FFFFFF;
             border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             cursor: pointer;
             perspective: 1000px;
             transition: transform 0.3s ease;
@@ -652,7 +806,7 @@
             height: 0;
             border-left: 160px solid transparent;
             border-right: 160px solid transparent;
-            border-top: 120px solid #F1F5F9;
+            border-top: 120px solid #f8d7da;
             transform-origin: top;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 3;
@@ -664,9 +818,9 @@
             left: 0;
             width: 0;
             height: 0;
-            border-left: 160px solid #E2E8F0;
-            border-right: 160px solid #E2E8F0;
-            border-bottom: 120px solid #CBD5E1;
+            border-left: 160px solid #f1aeb5;
+            border-right: 160px solid #f1aeb5;
+            border-bottom: 120px solid #ea868f;
             border-radius: 0 0 16px 16px;
             z-index: 2;
         }
@@ -677,20 +831,21 @@
             left: 20px;
             width: 360px;
             height: 200px;
-            background: #FFFAF0;
+            background: #FFF5F5;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             z-index: 1;
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.8s ease;
             overflow: hidden;
+            color: #333;
         }
 
         .letter-paper.open {
             transform: translateY(-160px);
             height: 390px;
             z-index: 4;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             overflow-y: auto;
         }
 
@@ -698,7 +853,7 @@
             font-family: var(--font-hand);
             font-size: 1.6rem;
             line-height: 1.6;
-            color: #334155;
+            color: #5c0011;
         }
 
         .stamp-mark {
@@ -707,14 +862,15 @@
             right: 16px;
             width: 45px;
             height: 55px;
-            border: 2px dashed #94A3B8;
+            border: 2px dashed #ff4d6d;
             border-radius: 4px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #94A3B8;
+            color: #ff4d6d;
             font-size: 0.8rem;
             transform: rotate(-8deg);
+            font-weight: bold;
         }
 
         /* ==========================================================================
@@ -739,11 +895,12 @@
 
         .speech-bubble {
             background: #FFFFFF;
+            color: #333;
             border-radius: 20px;
             padding: 12px 20px;
             font-weight: 700;
             font-size: 0.95rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             margin-bottom: 12px;
             position: relative;
             animation: bounce 2s infinite ease-in-out;
@@ -763,7 +920,7 @@
         .bear-svg {
             width: 110px;
             height: 110px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
         }
 
         @keyframes bounce {
@@ -805,7 +962,7 @@
             pointer-events: none;
             transition: all 0.5s ease;
             z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
         .wish-toast.show {
@@ -887,7 +1044,7 @@
             font-weight: 800;
             color: #FFFFFF;
             margin-bottom: 12px;
-            text-shadow: 0 0 25px rgba(255,255,255,0.3);
+            text-shadow: 0 0 25px rgba(255,255,255,0.4);
         }
 
         .final-subtitle {
@@ -916,20 +1073,20 @@
             gap: 10px;
             margin-top: 20px;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .btn-last-message:hover {
             background: rgba(255, 255, 255, 0.25);
             transform: translateY(-4px);
-            box-shadow: 0 15px 35px rgba(254, 240, 138, 0.2);
+            box-shadow: 0 15px 35px rgba(254, 240, 138, 0.3);
         }
 
         /* Modal Surat One Last Message */
         #last-message-modal {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 8, 20, 0.85);
+            background: rgba(20, 0, 5, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             z-index: 10000;
@@ -941,28 +1098,29 @@
         }
 
         .last-letter-card {
-            background: #FFFAF0;
+            background: #FFF5F5;
             width: 90%;
             max-width: 520px;
             padding: 40px 32px;
             border-radius: 24px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
             position: relative;
             transform: scale(0.85) translateY(30px);
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
+            color: #333;
         }
 
         .last-letter-text {
             font-family: var(--font-hand);
             font-size: 1.8rem;
-            color: #334155;
+            color: #5c0011;
             line-height: 1.7;
         }
 
         .btn-close-last-modal {
             margin-top: 28px;
-            background: var(--text-dark);
+            background: #ff4d6d;
             color: #FFFFFF;
             border: none;
             padding: 10px 28px;
@@ -1051,6 +1209,39 @@
 </head>
 <body>
 
+    <!-- ==========================================================================
+       PASSCODE OVERLAY SCREEN
+       ========================================================================== -->
+    <div id="passcode-screen">
+        <div class="passcode-wrapper">
+            <div class="polaroid">
+                <div class="polaroid-img">
+                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?q=80&w=400" alt="Beby Photo">
+                </div>
+                <div class="polaroid-caption">Happy Birthday Beby</div>
+            </div>
+
+            <div class="keypad-section">
+                <h3>Enter Passcode</h3>
+                <div id="pin-input" class="pin-display">------</div>
+                <div class="keypad">
+                    <button onclick="pressPin('1')">1</button>
+                    <button onclick="pressPin('2')">2</button>
+                    <button onclick="pressPin('3')">3</button>
+                    <button onclick="pressPin('4')">4</button>
+                    <button onclick="pressPin('5')">5</button>
+                    <button onclick="pressPin('6')">6</button>
+                    <button onclick="pressPin('7')">7</button>
+                    <button onclick="pressPin('8')">8</button>
+                    <button onclick="pressPin('9')">9</button>
+                    <button class="action-btn" onclick="clearPin()">C</button>
+                    <button onclick="pressPin('0')">0</button>
+                    <button class="action-btn" onclick="checkPin()">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Dynamic Background & Canvas -->
     <canvas id="bg-canvas"></canvas>
     <canvas id="night-stars-canvas"></canvas>
@@ -1078,11 +1269,11 @@
             <div class="music-bar"></div>
             <div class="music-bar"></div>
         </div>
-        <span style="font-size: 0.85rem; font-weight: 700; color: var(--deep-blue);" id="audio-status">PLAY MUSIC</span>
+        <span style="font-size: 0.85rem; font-weight: 700; color: #ffb3c1;" id="audio-status">PLAY MUSIC</span>
     </div>
 
-    <!-- Hidden Audio Elements (Placeholders) -->
-    <audio id="bg-music" loop src="https://pixabay.com/music/special-occasions-happy-birthday-to-you-background-piano-music-for-the-holiday-37-sec-316323/"></audio>
+    <!-- Hidden Audio Elements (Diperbarui dengan CDN audio stabil) -->
+    <audio id="bg-music" loop preload="auto" src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=happy-birthday-113333.mp3"></audio>
     <audio id="sfx-click" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
     <audio id="sfx-brush" src="https://assets.mixkit.co/active_storage/sfx/1484/1484-preview.mp3"></audio>
     <audio id="sfx-envelope" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
@@ -1090,7 +1281,7 @@
 
     <!-- Butterfly Animations -->
     <div class="butterfly" style="top: 20%; left: 10%;"><i class="fa-solid font-awesome-flag" style="color: #FEF08A;"></i>🦋</div>
-    <div class="butterfly" style="top: 60%; right: 15%; animation-delay: -4s;"><i class="fa-solid font-awesome-flag" style="color: #E0E7FF;"></i>🦋</div>
+    <div class="butterfly" style="top: 60%; right: 15%; animation-delay: -4s;"><i class="fa-solid font-awesome-flag" style="color: #FFCCD5;"></i>🦋</div>
 
     <!-- MAIN CONTENT WRAPPER -->
     <div id="smooth-wrapper">
@@ -1174,9 +1365,9 @@
                 </div>
 
                 <div class="puzzle-container-wrapper">
-                    <p style="font-weight: 600; color: var(--text-light); margin-bottom: 12px;">Geser kepingan gambar untuk menyusun kembali kenangan ini!</p>
+                    <p style="font-weight: 600; color: #ffb3c1; margin-bottom: 12px;">Geser kepingan gambar untuk menyusun kembali kenangan ini!</p>
                     <div id="puzzle-board"></div>
-                    <div id="puzzle-status" style="font-weight: 700; color: var(--deep-blue); min-height: 24px;"></div>
+                    <div id="puzzle-status" style="font-weight: 700; color: #FEF08A; min-height: 24px;"></div>
                 </div>
             </section>
 
@@ -1191,19 +1382,19 @@
                     <div class="timeline-card left">
                         <div class="timeline-year">2005</div>
                         <div class="timeline-title">The World Welcomed You 👶</div>
-                        <p style="color: var(--text-light); font-size: 0.95rem;">Hari di mana seorang gadis kecil yang lucu dan penuh keceriaan lahir ke dunia.</p>
+                        <p style="color: #ffb3c1; font-size: 0.95rem;">Hari di mana seorang gadis kecil yang lucu dan penuh keceriaan lahir ke dunia.</p>
                     </div>
 
                     <div class="timeline-card right">
                         <div class="timeline-year">Growing Up</div>
                         <div class="timeline-title">Spreading Warmth 🌟</div>
-                        <p style="color: var(--text-light); font-size: 0.95rem;">Tumbuh menjadi sosok yang selalu membawa tawa dan kehangatan bagi orang-orang di sekitar.</p>
+                        <p style="color: #ffb3c1; font-size: 0.95rem;">Tumbuh menjadi sosok yang selalu membawa tawa dan kehangatan bagi orang-orang di sekitar.</p>
                     </div>
 
                     <div class="timeline-card left">
                         <div class="timeline-year">Now • 21st Birthday</div>
                         <div class="timeline-title">Chapter 21 Begins ✨</div>
-                        <p style="color: var(--text-light); font-size: 0.95rem;">Memasuki usia 21 tahun dengan pribadi yang makin dewasa, hebat, dan penuh impian indah.</p>
+                        <p style="color: #ffb3c1; font-size: 0.95rem;">Memasuki usia 21 tahun dengan pribadi yang makin dewasa, hebat, dan penuh impian indah.</p>
                     </div>
                 </div>
             </section>
@@ -1321,26 +1512,60 @@
     </div>
 
     <!-- ==========================================================================
-       JAVASCRIPT ARCHITECTURE & LOGIC
-       ========================================================================== -->
+        JAVASCRIPT ARCHITECTURE & LOGIC
+        ========================================================================== -->
     <script>
+        /* ==========================================================================
+           0. PASSCODE LOGIC
+           ========================================================================== */
+        const CORRECT_PIN = "080805";
+        let currentPin = "";
+
+        function pressPin(num) {
+            if (typeof playSFX === "function") playSFX("click");
+            if (currentPin.length < 6) {
+                currentPin += num;
+                updatePinDisplay();
+            }
+        }
+
+        function clearPin() {
+            if (typeof playSFX === "function") playSFX("click");
+            currentPin = "";
+            updatePinDisplay();
+        }
+
+        function updatePinDisplay() {
+            const display = document.getElementById("pin-input");
+            display.textContent = currentPin.padEnd(6, "-");
+        }
+
+        function checkPin() {
+            if (currentPin === CORRECT_PIN) {
+                if (typeof playSFX === "function") playSFX("magic");
+                document.getElementById("passcode-screen").classList.add("hidden-passcode");
+                // Memulai lagu otomatis setelah passcode terbuka
+                if (window.startMusicOnGiftOpen) window.startMusicOnGiftOpen();
+            } else {
+                alert("Passcode salah! Coba lagi.");
+                clearPin();
+            }
+        }
+
         /* ==========================================================================
            1. INITIALIZATION & SETUP
            ========================================================================== */
         document.addEventListener("DOMContentLoaded", () => {
-            // Register GSAP ScrollTrigger
             gsap.registerPlugin(ScrollTrigger);
 
-            // Smooth Scroll Setup dengan Lenis (Dioptimalkan untuk Mousepad & Touch)
             const lenis = new Lenis({
                 duration: 1.2,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smoothTouch: false, // Membiarkan touch/mousepad berjalan responsif
+                smoothTouch: false,
                 touchMultiplier: 2,
                 mouseMultiplier: 1
             });
 
-            // Sinkronkan Lenis dengan GSAP ScrollTrigger
             lenis.on('scroll', ScrollTrigger.update);
             gsap.ticker.add((time) => {
                 lenis.raf(time * 1000);
@@ -1373,13 +1598,12 @@
             resizeCanvas();
             window.addEventListener("resize", resizeCanvas);
 
-            // Cloud Particles System
             const clouds = Array.from({ length: 15 }, () => ({
                 x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
                 radius: Math.random() * 80 + 40,
                 speed: Math.random() * 0.3 + 0.1,
-                opacity: Math.random() * 0.4 + 0.2
+                opacity: Math.random() * 0.2 + 0.1
             }));
 
             function animateClouds() {
@@ -1388,7 +1612,7 @@
                 clouds.forEach(cloud => {
                     ctx.beginPath();
                     ctx.arc(cloud.x, cloud.y, cloud.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(255, 255, 255, ${cloud.opacity})`;
+                    ctx.fillStyle = `rgba(255, 179, 193, ${cloud.opacity})`;
                     ctx.filter = "blur(20px)";
                     ctx.fill();
 
@@ -1436,7 +1660,6 @@
             function drawNightSky() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                // Gambar Bintang Kelap-Kelip
                 starsList.forEach(star => {
                     ctx.beginPath();
                     ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
@@ -1448,7 +1671,6 @@
                     star.alpha += Math.sin(Date.now() * star.speed) * 0.01;
                 });
 
-                // Gambar Bintang Jatuh (Shooting Stars)
                 shootingStarsList.forEach((s, index) => {
                     ctx.beginPath();
                     ctx.moveTo(s.x, s.y);
@@ -1468,7 +1690,6 @@
             }
             drawNightSky();
 
-            // Easter Egg: Klik Bintang Mana Saja Untuk Memunculkan Shooting Star
             canvas.addEventListener("click", (e) => {
                 shootingStarsList.push({
                     x: e.clientX,
@@ -1488,7 +1709,7 @@
         }
 
         /* ==========================================================================
-           3. AUDIO CONTROLLER SYSTEM
+           3. AUDIO CONTROLLER SYSTEM (IMPROVED)
            ========================================================================== */
         function initAudioSystem() {
             const audioBtn = document.getElementById("audio-btn");
@@ -1505,19 +1726,6 @@
                 }
             };
 
-            function toggleAudio() {
-                if (isPlaying) {
-                    bgMusic.pause();
-                    audioWidgetState(false);
-                } else {
-                    bgMusic.play().then(() => {
-                        audioWidgetState(true);
-                    }).catch(() => {
-                        console.log("Audio autoplay restricted");
-                    });
-                }
-            }
-
             function audioWidgetState(active) {
                 isPlaying = active;
                 if (active) {
@@ -1526,6 +1734,19 @@
                 } else {
                     audioBtn.classList.remove("playing");
                     audioStatus.textContent = "PLAY MUSIC";
+                }
+            }
+
+            function toggleAudio() {
+                if (isPlaying) {
+                    bgMusic.pause();
+                    audioWidgetState(false);
+                } else {
+                    bgMusic.play().then(() => {
+                        audioWidgetState(true);
+                    }).catch((err) => {
+                        console.log("Audio play error:", err);
+                    });
                 }
             }
 
@@ -1556,17 +1777,15 @@
 
             function triggerOpenGift() {
                 playSFX("click");
-                window.startMusicOnGiftOpen();
+                if (window.startMusicOnGiftOpen) window.startMusicOnGiftOpen();
 
-                // Trigger Confetti
                 confetti({
                     particleCount: 120,
                     spread: 80,
                     origin: { y: 0.6 },
-                    colors: ['#87CEEB', '#FEF08A', '#FFFFFF', '#D1FAE5']
+                    colors: ['#ff4d6d', '#FEF08A', '#FFFFFF', '#FFCCD5']
                 });
 
-                // Lift Gift Lid Animation
                 gsap.to(giftLid, {
                     y: -120,
                     rotation: -15,
@@ -1620,13 +1839,11 @@
                     canvas.width = container.clientWidth;
                     canvas.height = container.clientHeight;
 
-                    // Fill canvas with artistic blur layer
-                    ctx.fillStyle = "#BDE0FE";
+                    ctx.fillStyle = "#ff758f";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    // Add soft text/pattern on top
                     ctx.font = "600 16px 'Plus Jakarta Sans'";
-                    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
                     ctx.textAlign = "center";
                     ctx.fillText("✨ Usap di sini ✨", canvas.width / 2, canvas.height / 2);
                 }
@@ -1676,13 +1893,10 @@
                         isFullyRevealed = true;
                         gsap.to(canvas, { opacity: 0, duration: 0.8, onComplete: () => canvas.style.display = "none" });
                         gsap.to(hint, { opacity: 0, duration: 0.4 });
-                        
-                        // Enable Apple Live Photo 3D Hover/Parallax Effect
                         enableAppleLivePhoto(container, img);
                     }
                 }
 
-                // Lightbox Zoom Click Event
                 container.addEventListener("click", () => {
                     if (isFullyRevealed) {
                         modalImg.src = img.src;
@@ -1703,7 +1917,6 @@
             });
         }
 
-        // Apple Live Photo Parallax Effect
         function enableAppleLivePhoto(container, img) {
             container.addEventListener("mousemove", (e) => {
                 const rect = container.getBoundingClientRect();
@@ -1741,7 +1954,6 @@
             let tiles = [0, 1, 2, 3, 4, 5, 6, 7, 8];
             const winningTiles = [...tiles];
 
-            // Shuffle Tiles (Ensure solvable)
             tiles.sort(() => Math.random() - 0.5);
 
             function renderBoard() {
@@ -1767,8 +1979,8 @@
             function moveTile(position) {
                 const emptyPos = tiles.indexOf(8);
                 const validMoves = [
-                    emptyPos - 1, emptyPos + 1, // Left, Right
-                    emptyPos - 3, emptyPos + 3  // Up, Down
+                    emptyPos - 1, emptyPos + 1,
+                    emptyPos - 3, emptyPos + 3
                 ];
 
                 if (validMoves.includes(position)) {
@@ -1854,27 +2066,23 @@
             const btnCloseLast = document.getElementById("btn-close-last");
             const starsCanvas = document.getElementById("night-stars-canvas");
 
-            // Transisi Langit Malam saat Scroll ke Ending Section
             ScrollTrigger.create({
                 trigger: "#ending-sec",
                 start: "top 60%",
                 onEnter: () => {
-                    document.body.style.backgroundColor = "#0B1120"; // Dark Night
                     starsCanvas.style.opacity = "1";
                     if (document.getElementById("aurora-bg")) {
-                        document.getElementById("aurora-bg").style.opacity = "0.4";
+                        document.getElementById("aurora-bg").style.opacity = "0.3";
                     }
                 },
                 onLeaveBack: () => {
-                    document.body.style.backgroundColor = "#87CEEB"; // Sky Blue
                     starsCanvas.style.opacity = "0";
                     if (document.getElementById("aurora-bg")) {
-                        document.getElementById("aurora-bg").style.opacity = "0.7";
+                        document.getElementById("aurora-bg").style.opacity = "0.5";
                     }
                 }
             });
 
-            // Interaksi Klik Pada Bintang Utama (Make a Wish)
             wishingStar.addEventListener("click", () => {
                 if (typeof playSFX === "function") playSFX("magic");
 
@@ -1886,22 +2094,18 @@
                         wishingStar.style.display = "none";
                         gsap.to(wishText, { opacity: 0, duration: 0.5, onComplete: () => wishText.style.display = "none" });
 
-                        // Ledakan Partikel Confetti
                         confetti({
                             particleCount: 180,
                             spread: 100,
                             origin: { y: 0.5 },
-                            colors: ['#FEF08A', '#FFFFFF', '#E0E7FF', '#FACC15']
+                            colors: ['#FEF08A', '#FFFFFF', '#ffb3c1', '#FACC15']
                         });
 
-                        // Munculkan Kupu-Kupu Bercahaya
                         spawnGlowingButterflies();
 
-                        // Tampilkan Pesan Tulisan Tangan
                         finalMessageBox.style.display = "flex";
                         gsap.to(finalMessageBox, { opacity: 1, duration: 2, ease: "power2.out" });
 
-                        // Tampilkan Tombol One Last Message Setelah 2.5 Detik
                         setTimeout(() => {
                             btnLastMsg.style.display = "flex";
                             gsap.to(btnLastMsg, { opacity: 1, y: 0, duration: 1 });
@@ -1910,7 +2114,6 @@
                 });
             });
 
-            // Fungsi Kupu-Kupu Bercahaya
             function spawnGlowingButterflies() {
                 const container = document.getElementById("butterflies-container");
                 for (let i = 0; i < 8; i++) {
@@ -1934,7 +2137,6 @@
                 }
             }
 
-            // Buka Modal Surat One Last Message
             btnLastMsg.addEventListener("click", () => {
                 if (typeof playSFX === "function") playSFX("envelope");
                 lastModal.style.display = "flex";
@@ -1942,7 +2144,6 @@
                 gsap.to(lastLetterCard, { scale: 1, y: 0, duration: 0.6, ease: "back.out(1.4)" });
             });
 
-            // Tutup Modal & Munculkan Kado Replay Sinematik
             btnCloseLast.addEventListener("click", () => {
                 if (typeof playSFX === "function") playSFX("click");
                 gsap.to(lastModal, {
@@ -1956,7 +2157,6 @@
                 });
             });
 
-            // Replay Perjalanan (Reload Sinematik)
             replayGift.addEventListener("click", () => {
                 if (typeof playSFX === "function") playSFX("click");
                 gsap.to("body", {
