@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Happy 21st Birthday, Beby! 🎈✨</title>
     
+    <!-- Meta Tag untuk Open Graph (Pratinjau Link WhatsApp) -->
+    <meta property="og:title" content="Happy 21st Birthday, Beby! 🎈✨">
+    <meta property="og:description" content="Ada kejutan spesial dari Jo buat kamu. Buka tautan ini ya!">
+    <meta property="og:image" content="utama.jpeg">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -275,7 +280,6 @@
             100% { transform: translate(80px, 50px) scale(1.15); }
         }
 
-        /* Custom Cursor Glow */
         #cursor-glow {
             position: fixed;
             width: 30px;
@@ -469,7 +473,6 @@
             background: #ff758f;
         }
 
-        /* Revealed Hero Title */
         .hero-title-container {
             display: none;
             opacity: 0;
@@ -532,7 +535,7 @@
         }
 
         /* ==========================================================================
-           6. BRUSH REVEAL & LIVE PHOTO GALLERY (FIXED POSITIONING & CLASSES)
+           6. GALLERY SECTION
            ========================================================================== */
         .gallery-grid {
             display: grid;
@@ -562,7 +565,6 @@
             cursor: pointer;
         }
 
-        /* Class Utama Gambar Galeri */
         .live-photo-img {
             width: 100%;
             height: 100%;
@@ -574,9 +576,8 @@
             filter: brightness(1.02) contrast(1.02);
         }
 
-        /* Custom Object Positions per Gambar */
         .gallery-card:nth-child(1) .live-photo-img {
-            object-position: 85% center; /* Menggeser gambar pertama agar wajah Beby di kanan terlihat utuh */
+            object-position: 85% center;
         }
 
         .gallery-card:nth-child(2) .live-photo-img {
@@ -1104,22 +1105,22 @@
             transition: opacity 0.6s ease;
         }
 
-    .last-letter-card {
-    background: #FFF5F5;
-    width: 90%;
-    max-width: 520px;
-    max-height: 80vh; /* Membatasi tinggi maksimal kartu */
-    overflow-y: auto; /* Mengaktifkan scroll internal */
-    -webkit-overflow-scrolling: touch; /* Mengoptimalkan scroll di layar sentuh */
-    padding: 40px 32px 30px;
-    border-radius: 24px;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-    position: relative;
-    transform: scale(0.85) translateY(30px);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-    text-align: center;
-    color: #333;
-}
+        .last-letter-card {
+            background: #FFF5F5;
+            width: 90%;
+            max-width: 520px;
+            max-height: 80vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 40px 32px 30px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            position: relative;
+            transform: scale(0.85) translateY(30px);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            color: #333;
+        }
 
         .last-letter-text {
             font-family: var(--font-hand);
@@ -1329,7 +1330,7 @@
                     <!-- Gallery Item 1 (Perpustakaan BI) -->
                     <div class="gallery-card">
                         <div class="canvas-reveal-container">
-                            <img src="WhatsApp Image 2026-08-07 at 16.53.25.jpeg" class="live-photo-img" alt="Memory 1">
+                            <img src="beby1.jpeg" class="live-photo-img" alt="Memory 1">
                             <canvas class="reveal-canvas"></canvas>
                             <div class="glass-reflection"></div>
                             <div class="reveal-hint"><i class="fa-solid fa-paint-brush"></i> Usap layar untuk membuka</div>
@@ -1340,7 +1341,7 @@
                     <!-- Gallery Item 2 (Kereta Api Binjai) -->
                     <div class="gallery-card">
                         <div class="canvas-reveal-container">
-                            <img src="WhatsApp Image 2026-08-07 at 17.23.29.jpeg" class="live-photo-img" alt="Memory 2">
+                            <img src="beby3.jpeg" class="live-photo-img" alt="Memory 2">
                             <canvas class="reveal-canvas"></canvas>
                             <div class="glass-reflection"></div>
                             <div class="reveal-hint"><i class="fa-solid fa-hand-sparkles"></i> Bersihkan kabut</div>
@@ -1469,16 +1470,15 @@
     </div>
 
     <!-- MODAL ONE LAST MESSAGE -->
-    <!-- SESUDAHNYA -->
-<div id="last-message-modal">
-    <div class="last-letter-card" id="last-letter-card" data-lenis-prevent>
+    <div id="last-message-modal">
+        <div class="last-letter-card" id="last-letter-card" data-lenis-prevent>
             <div class="last-letter-text">
                 "Thanks for being my partner at college.<br><br>
                 I'm really grateful to know u.<br><br>
                 yah mungkin dlm sehari" kita sering berantem sih,tapi balik akur lagi<br>
                 but one thing u need to know, you're not alone I'm still here<br>
                 I don't want to see u always sick like before college, u have to be healthy<br>
-    
+                <br>
                 let's grow together<br>
                 let's reach our dreams together<br>
                 once again<br>
